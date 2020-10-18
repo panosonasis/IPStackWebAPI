@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30611.23
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IPStackWebAPI", "IPStackWebAPI\IPStackWebAPI.csproj", "{FCAA9BC7-D4F1-4848-AC29-A7EB7BAD05F6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IPStackExternalService", "IPStackExternalService\IPStackExternalService.csproj", "{39F790E8-0E36-4751-9C53-16E4E6239834}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FCAA9BC7-D4F1-4848-AC29-A7EB7BAD05F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCAA9BC7-D4F1-4848-AC29-A7EB7BAD05F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCAA9BC7-D4F1-4848-AC29-A7EB7BAD05F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCAA9BC7-D4F1-4848-AC29-A7EB7BAD05F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39F790E8-0E36-4751-9C53-16E4E6239834}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39F790E8-0E36-4751-9C53-16E4E6239834}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39F790E8-0E36-4751-9C53-16E4E6239834}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39F790E8-0E36-4751-9C53-16E4E6239834}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {59C46847-5402-4774-B97B-67EE6FA9E957}
+	EndGlobalSection
+EndGlobal
