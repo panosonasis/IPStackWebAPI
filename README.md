@@ -3,7 +3,7 @@ This is a WebAPI project written in .Net Core 3.1 that uses an external API for 
 These details are saved in local db and in cache for a few minutes using caching and repository mechanisms. Also those IP details can be updated using a batch Update that 
 put all sent items into a buffer and process them 10 at a time.
  
-## Start the project 
+# Start the project 
 At first , you need to have MS SQL database server running in your PC and configure the ConnectionStrings:DefaultConnection that exists inside 'appsettings.json'
 of the project to correspond to your own MS SQL database server and credential.
 
@@ -11,10 +11,10 @@ Then the API can be started by [dotnet run]  command executed in the main direct
 The database will be created at startup and some of mock data will be inserted in the table IPDetails.
 
 
-## Example of rout
+# Example of rout
 (http://localhost:44308/)
 
-##API Usage
+# API Usage
 
 1. IP Get/Post - 'https://localhost:44308/api/IPStack'
 	- Get request accepts an ip parameter and will return details about the specific ip. Example: 'https://localhost:44308/IPStack?ip=85.73.138.103'
