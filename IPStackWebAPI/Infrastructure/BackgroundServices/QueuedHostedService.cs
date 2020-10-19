@@ -22,6 +22,11 @@ namespace IPStackWebAPI.Infrastructure.BackgroundServices
 
         public IBackgroundTaskQueue TaskQueue { get; }
 
+        /// <summary>
+        /// Background Tasks are dequeued and executed as a BackgroundService
+        /// </summary>
+        /// <param name="stoppingToken"></param>
+        /// <returns></returns>
         protected async override Task ExecuteAsync(CancellationToken stoppingToken)
         {
             while (false == stoppingToken.IsCancellationRequested)

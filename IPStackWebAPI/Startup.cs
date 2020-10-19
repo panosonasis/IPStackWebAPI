@@ -50,8 +50,9 @@ namespace IPStackWebAPI
             //Register types of external service dll
             ModuleRegistration.RegisterTypes(services);
 
-            //Used a decorator like pattern
+            //Used a decorator pattern
             services.AddScoped(FactoryDecorator);
+            services.AddScoped<IJobProgressService, JobProgressService>();
             services.AddScoped<IIPStackService, IPStackService>();
 
             services.AddControllers();
@@ -65,14 +66,13 @@ namespace IPStackWebAPI
 
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
-            //app.UseExceptionHandler("/Error"); 
             //Error Handling Middleware
             app.UseMiddleware<ErrorHandlingMiddleware>();
 
@@ -88,7 +88,7 @@ namespace IPStackWebAPI
                 endpoints.MapControllers();
             });
 
-            DBInitializer.Seed(app);
+            DBInitializer.Seed(serviceProvider.GetRequiredService<ApplicationContext>());
         }
     }
 }

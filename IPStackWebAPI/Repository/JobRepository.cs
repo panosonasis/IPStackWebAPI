@@ -26,6 +26,12 @@ namespace IPStackWebAPI.Repository
                 return string.Empty;
         }
 
+        public async Task<Job> GetJobByGuid(Guid jobId, CancellationToken cancellationToken)
+        {
+            var job = await _appContext.Job.AsNoTracking().Where(x => x.JobId == jobId).SingleOrDefaultAsync(cancellationToken);
+            return job;
+        }
+
         public async Task<Job> CreateJob(Job job, CancellationToken cancellationToken)
         {
             _appContext.Job.Add(job);
@@ -38,6 +44,27 @@ namespace IPStackWebAPI.Repository
             _appContext.Entry(job).State = EntityState.Modified;
             await _appContext.SaveChangesAsync(cancellationToken);
             return job;
+        }
+
+        public async Task UpdateJobFailedRequests(Guid job, int i, CancellationToken cancellationToken)
+        {
+            var job4update = _appContext.Job.Find(job);
+            job4update.FailedUpdates += i;
+            await _appContext.SaveChangesAsync(cancellationToken);
+        }
+
+        public async Task UpdateJob(Guid job,int i,CancellationToken cancellationToken)
+        {
+            var job4update = _appContext.Job.Find(job);
+            job4update.CompletedUpdates += i;
+            await _appContext.SaveChangesAsync(cancellationToken);
+        }
+
+        public async Task UpdateJob(Guid job, bool finished, CancellationToken cancellationToken)
+        {
+            var job4update = _appContext.Job.Find(job);
+            job4update.HasFinished = finished;
+            await _appContext.SaveChangesAsync(cancellationToken);
         }
 
         public async Task<bool> DeleteJobById(Guid jobId, CancellationToken cancellationToken)

@@ -35,6 +35,12 @@ namespace IPStackWebAPI.Middleware
             }
         }
 
+        /// <summary>
+        /// All the erros in the api pass through this handler 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="ex"></param>
+        /// <returns></returns>
         private static Task HandleExceptionAsync(HttpContext context, Exception ex)
         {
             var code = HttpStatusCode.InternalServerError;

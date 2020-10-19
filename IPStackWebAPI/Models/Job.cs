@@ -13,6 +13,7 @@ namespace IPStackWebAPI.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid JobId { get; set; }
         public int? CompletedUpdates{ get; set; }
+        public int? FailedUpdates { get; set; }
         public int? TotalUpdates { get; set; }
         public bool? HasFinished { get; set; }
     }
