@@ -2,10 +2,20 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using IPStackExternalService;
+using IPStackExternalService.Services;
+using IPStackWebAPI.Data;
+using IPStackWebAPI.Infrastructure;
+using IPStackWebAPI.Infrastructure.BackgroundServices;
+using IPStackWebAPI.Middleware;
+using IPStackWebAPI.Repository;
+using IPStackWebAPI.Services;
+using IPStackWebAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -25,8 +35,34 @@ namespace IPStackWebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHttpClient();
+            //register Infrastructure classes
+            services.AddHostedService<QueuedHostedService>();
+            services.AddSingleton<IBackgroundTaskQueue, BackgroundTaskQueue>();
+            services.AddSingleton<IPMemoryCache>();
+            services.AddScoped<IIPDetailsBuffer, IPDetailsBuffer>();
+            //Register DB Connection string
+            services.AddDbContext<ApplicationContext>(options => { options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")); });
+
+            services.AddTransient<IPStackRepository>();
+            services.AddTransient<JobRepository>();
+
+            //Register types of external service dll
+            ModuleRegistration.RegisterTypes(services);
+
+            //Used a decorator like pattern
+            services.AddScoped(FactoryDecorator);
+            services.AddScoped<IIPStackService, IPStackService>();
+
             services.AddControllers();
         }
+
+        private IIPServiceProvider FactoryDecorator(IServiceProvider arg)
+        {
+            return new IPStackServiceCache(arg.GetService<IPMemoryCache>(),new IPStackServiceRepo(arg.GetService<IPStackRepository>(), 
+                new IPStackServiceExternalApi(arg.GetService<IIPInfoProvider>())));
+        }
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -35,6 +71,11 @@ namespace IPStackWebAPI
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            //app.UseExceptionHandler("/Error"); 
+            //Error Handling Middleware
+            app.UseMiddleware<ErrorHandlingMiddleware>();
+
 
             app.UseHttpsRedirection();
 
@@ -46,6 +87,8 @@ namespace IPStackWebAPI
             {
                 endpoints.MapControllers();
             });
+
+            DBInitializer.Seed(app);
         }
     }
 }

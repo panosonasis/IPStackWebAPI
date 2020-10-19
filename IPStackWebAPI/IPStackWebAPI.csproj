@@ -10,5 +10,9 @@
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="3.1.9" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\IPStackExternalService\IPStackExternalService.csproj" />
+  </ItemGroup>
+
 
 </Project>
