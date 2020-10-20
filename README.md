@@ -20,8 +20,10 @@ Postman a desktop app or you can use it [chrome extension](https://chrome.google
 
 1. IP Get/Post - 'https://localhost:44308/api/IPStack'
 	- Get request accepts an ip parameter and will return details about the specific ip. Example: 'https://localhost:44308/api/IPStack?ip=85.73.138.103'
-	- Post request accepts a body with an array of IPDetails that will be updated and it will return a unique JobId  that will be used in the next endpoint
+	- Post request accepts a body with an array of IPDetails that will be updated and it will return a unique JobId  that will be used in the next endpoint.
+	
 		Example of json object -
+		
 		```
 		[{
 			"ip": "85.73.138.103",
