@@ -12,7 +12,9 @@ The database will be created at startup and some mock data will be inserted in t
 
 # PreRequisite
 MS SQL Database server [Download from here](https://www.microsoft.com/en-us/sql-server/sql-server-downloads)
-Postman a desktop app or you can use it [chrome extension](https://chrome.google.com/webstore/category/extensions) for API testing.[Download from here](https://www.getpostman.com/apps)
+Postman a desktop app or you can use it [chrome extension](https://chrome.google.com/webstore/category/extensions) for API testing [Download from here](https://www.getpostman.com/apps)
+
+
 
 # API Usage
 
