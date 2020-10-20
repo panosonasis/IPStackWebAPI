@@ -28,9 +28,15 @@ namespace IPStackWebAPI.Repository
 
         public async Task<IPDetailsExtDTO> CreateIPDetails(IPDetailsExtDTO iPDetails, CancellationToken cancellationToken)
         {
-             _appContext.IPDetails.Add(iPDetails);
-            await _appContext.SaveChangesAsync(cancellationToken);
-            return iPDetails;
+             var obj = _appContext.IPDetails.Find(iPDetails.IP);
+            if (obj == null)
+            {
+                _appContext.IPDetails.Add(iPDetails);
+                await _appContext.SaveChangesAsync(cancellationToken);
+                return iPDetails;
+            }
+            else
+                return obj;
         }
 
         public async Task<bool> UpdateIPDetails(IPDetailsExtDTO iPDetails, CancellationToken cancellationToken)

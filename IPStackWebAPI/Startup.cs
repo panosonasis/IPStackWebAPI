@@ -65,7 +65,7 @@ namespace IPStackWebAPI
 
         private IIPServiceProvider FactoryDecorator(IServiceProvider arg)
         {
-            return new IPStackServiceCache(arg.GetService<IPMemoryCache>(),new IPStackServiceRepo(arg.GetService<IPStackRepository>(), 
+            return new IPStackServiceCache(arg.GetService<IPMemoryCache>(),new IPStackServiceRepo(arg.GetService<IIPStackRepository>(), 
                 new IPStackServiceExternalApi(arg.GetService<IIPInfoProvider>())));
         }
 

@@ -12,10 +12,10 @@ namespace IPStackWebAPI.Services
 {
     public class IPStackServiceRepo : IIPServiceProvider
     {
-        private readonly IPStackRepository _iPStackRepository;
+        private readonly IIPStackRepository _iPStackRepository;
         private readonly IIPServiceProvider _iPServiceProvider;
 
-        public IPStackServiceRepo(IPStackRepository iPStackRepository, IIPServiceProvider iPServiceProvider)
+        public IPStackServiceRepo(IIPStackRepository iPStackRepository, IIPServiceProvider iPServiceProvider)
         {
             _iPStackRepository = iPStackRepository;
             _iPServiceProvider = iPServiceProvider;
