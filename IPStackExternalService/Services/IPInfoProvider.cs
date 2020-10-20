@@ -35,25 +35,33 @@ namespace IPStackExternalService.Services
         /// <returns></returns>
         public  async  Task<IPDetails> GetDetails(string ip, CancellationToken cancellationToken)
         {
-            IPDetailsDTO ipDetails;
-            IPDetailsError ipDetailsError;
-            var request = new HttpRequestMessage(HttpMethod.Get,$"{_baseUrl}{ip}?access_key={_accessKey}");
-            var ipStackClient = _clientFactory.CreateClient();
-            var ipStackResponse = await ipStackClient.SendAsync(request, cancellationToken);
-
-            if (ipStackResponse.IsSuccessStatusCode)
+            try
             {
-                var responseStream = await ipStackResponse.Content.ReadAsStringAsync();
-                ipDetailsError = JsonConvert.DeserializeObject<IPDetailsError>(responseStream);
-                if (!ipDetailsError.success && ipDetailsError.error != null)
-                    throw new IPServiceNotAvailableException(ipDetailsError.error.info);
+                IPDetailsDTO ipDetails;
+                IPDetailsError ipDetailsError;
+                var request = new HttpRequestMessage(HttpMethod.Get, $"{_baseUrl}{ip}?access_key={_accessKey}");
+                var ipStackClient = _clientFactory.CreateClient();
+                var ipStackResponse = await ipStackClient.SendAsync(request, cancellationToken);
 
-                ipDetails = JsonConvert.DeserializeObject<IPDetailsDTO>(responseStream);
+                if (ipStackResponse.IsSuccessStatusCode)
+                {
+                    var responseStream = await ipStackResponse.Content.ReadAsStringAsync();
+                    ipDetailsError = JsonConvert.DeserializeObject<IPDetailsError>(responseStream);
+                    if (!ipDetailsError.success && ipDetailsError.error != null)
+                        throw new IPServiceNotAvailableException(ipDetailsError.error.info);
+
+                    ipDetails = JsonConvert.DeserializeObject<IPDetailsDTO>(responseStream);
+                }
+                else
+                    throw new IPServiceNotAvailableException(await ipStackResponse.Content.ReadAsStringAsync());
+
+                return ipDetails;
             }
-            else
-                throw new IPServiceNotAvailableException(await ipStackResponse.Content.ReadAsStringAsync());
-
-            return ipDetails;
+            catch (Exception ex)
+            {
+                throw new IPServiceNotAvailableException(ex.Message,ex.InnerException);
+            }
+           
         }
     }
 }

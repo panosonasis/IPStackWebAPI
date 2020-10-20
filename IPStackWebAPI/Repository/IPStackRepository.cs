@@ -11,15 +11,13 @@ using System.Threading.Tasks;
 namespace IPStackWebAPI.Repository
 {
 
-    public class IPStackRepository
+    public class IPStackRepository : IIPStackRepository
     {
         private readonly ApplicationContext _appContext;
-        private readonly IPMemoryCache _iPMemoryCache;
 
-        public IPStackRepository(ApplicationContext appContext, IPMemoryCache iPMemoryCache)
+        public IPStackRepository(ApplicationContext appContext)
         {
             _appContext = appContext;
-            _iPMemoryCache = iPMemoryCache;
         }
 
         public async Task<IPDetailsExtDTO> GetIPDetailsIfExist(string ip, CancellationToken cancellationToken)
@@ -50,8 +48,6 @@ namespace IPStackWebAPI.Repository
                     _appContext.Entry(item).State = EntityState.Modified;
 
                 await _appContext.SaveChangesAsync(cancellationToken);
-                //Update cache
-                UpdateIPDetailsCache(iPDetails);
                 return true;
             }
             catch (Exception ex)
@@ -60,15 +56,5 @@ namespace IPStackWebAPI.Repository
             }
 
         }
-
-        private void UpdateIPDetailsCache(List<IPDetailsExtDTO> iPsDetails)
-        {
-            foreach (var ipDetails in iPsDetails)
-            {
-                _iPMemoryCache.RemoveIfExists(ipDetails.IP);
-                _iPMemoryCache.TryCreateValue(ipDetails.IP, ipDetails);            
-            }
-        }
-
     }
 }

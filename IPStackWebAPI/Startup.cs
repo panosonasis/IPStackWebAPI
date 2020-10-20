@@ -44,7 +44,7 @@ namespace IPStackWebAPI
             //Register DB Connection string
             services.AddDbContext<ApplicationContext>(options => { options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")); });
 
-            services.AddTransient<IPStackRepository>();
+            services.AddTransient(FactoryRepositoryDecorator);
             services.AddTransient<JobRepository>();
 
             //Register types of external service dll
@@ -56,6 +56,11 @@ namespace IPStackWebAPI
             services.AddScoped<IIPStackService, IPStackService>();
 
             services.AddControllers();
+        }
+
+        private IIPStackRepository FactoryRepositoryDecorator(IServiceProvider arg)
+        {
+            return new CachedIPStackRepository(new IPStackRepository(arg.GetService<ApplicationContext>()), arg.GetService<IPMemoryCache>());
         }
 
         private IIPServiceProvider FactoryDecorator(IServiceProvider arg)
@@ -88,6 +93,7 @@ namespace IPStackWebAPI
                 endpoints.MapControllers();
             });
 
+            //Seed DB if table is empty
             DBInitializer.Seed(serviceProvider.GetRequiredService<ApplicationContext>());
         }
     }

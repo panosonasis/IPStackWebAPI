@@ -63,7 +63,7 @@ namespace IPStackWebAPI.Services
 
         private async Task UpdateIPDetailsBatchInternal(IEnumerable<IPDetailsExtDTO> iPsDetails, Guid jobId, IServiceProvider scopedServices,CancellationToken cancellationToken)
         {
-            var iPStackRepository = scopedServices.GetRequiredService<IPStackRepository>();
+            var iPStackRepository = scopedServices.GetRequiredService<IIPStackRepository>();
             var iPDetailsBuffer = scopedServices.GetRequiredService<IIPDetailsBuffer>();
             var jobService = scopedServices.GetRequiredService<IJobProgressService>();
 

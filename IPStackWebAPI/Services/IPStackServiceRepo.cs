@@ -13,12 +13,12 @@ namespace IPStackWebAPI.Services
     public class IPStackServiceRepo : IIPServiceProvider
     {
         private readonly IPStackRepository _iPStackRepository;
-        private readonly IIPServiceProvider _iPStackServiceExternalApi;
+        private readonly IIPServiceProvider _iPServiceProvider;
 
-        public IPStackServiceRepo(IPStackRepository iPStackRepository, IIPServiceProvider iPStackServiceExternalApi)
+        public IPStackServiceRepo(IPStackRepository iPStackRepository, IIPServiceProvider iPServiceProvider)
         {
             _iPStackRepository = iPStackRepository;
-            _iPStackServiceExternalApi = iPStackServiceExternalApi;
+            _iPServiceProvider = iPServiceProvider;
         }
 
         public async Task<IPDetailsDTO> GetIPDetails(string ip, CancellationToken cancellationToken)
@@ -29,7 +29,7 @@ namespace IPStackWebAPI.Services
 
             if (ipDetailsEntity == null)
             {
-                var ipDetails = await _iPStackServiceExternalApi.GetIPDetails(ip, cancellationToken);
+                var ipDetails = await _iPServiceProvider.GetIPDetails(ip, cancellationToken);
 
                 IPDetailsExtDTO temp = new IPDetailsExtDTO() 
                 {
