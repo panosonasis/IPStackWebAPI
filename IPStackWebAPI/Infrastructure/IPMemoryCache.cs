@@ -10,47 +10,48 @@ namespace IPStackWebAPI.Infrastructure
     public class IPMemoryCache
     {
         private MemoryCache _cache;
+        private static object _cacheLock = new object();
 
         public IPMemoryCache()
         {
             _cache = new MemoryCache(new MemoryCacheOptions
             {
-                //SizeLimit = 1024
             });
         }
 
         public bool TryCreateValue(string ip, IPDetailsDTO ipDetails)
         {
-            IPDetailsDTO ipDetailsCached;
-            if (!_cache.TryGetValue(ip, out ipDetailsCached))
+            lock (_cacheLock)
             {
-                //Key is not in cache , setting cache options
-                var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromMinutes(1));
-                _cache.Set(ip, ipDetails, cacheEntryOptions);
-                return true;
+                IPDetailsDTO ipDetailsCached;
+                if (!_cache.TryGetValue(ip, out ipDetailsCached))
+                {
+                    //Key is not in cache , setting cache options
+                    var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromMinutes(1));
+                    _cache.Set(ip, ipDetails, cacheEntryOptions);
+                    return true;
+                }
+                else
+                    return false;
             }
-            else
-                return false;
         }
 
-        //TODO remove
-        public IPDetailsDTO GetValueSetIfExists(string ip)
+        public bool TryGetIpDetails(string ip, out IPDetailsDTO ipDetailsCached)
         {
-            IPDetailsDTO ipDetailsCached;
-
-            if (!_cache.TryGetValue(ip, out ipDetailsCached))    
-                return null; //Key is not in cache
-            else
-                return ipDetailsCached; //Key is in cache 
+            lock (_cacheLock) 
+            {
+                return _cache.TryGetValue(ip, out ipDetailsCached);
+            };
         }
-
-        public bool TryGetIpDetails(string ip, out IPDetailsDTO ipDetailsCached) => _cache.TryGetValue(ip, out ipDetailsCached);
 
         public void RemoveIfExists(string ip)
         {
-            IPDetailsDTO ipDetailsCached;
-            if (_cache.TryGetValue(ip, out ipDetailsCached))
-                _cache.Remove(ip);
+            lock (_cacheLock)
+            {
+                IPDetailsDTO ipDetailsCached;
+                if (_cache.TryGetValue(ip, out ipDetailsCached))
+                    _cache.Remove(ip);
+            }
         }
     }
 }
